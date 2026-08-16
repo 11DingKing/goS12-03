@@ -78,9 +78,11 @@ func (o *Operation) ConfirmByStation(stationID string) error {
 	return nil
 }
 
-// CanExecute returns true only when both parties have confirmed.
+// CanExecute returns true only when both parties have confirmed and the
+// operation is still standing in the confirmed state.  A cancelled operation is
+// never executable, no matter how it was confirmed before.
 func (o *Operation) CanExecute() bool {
-	return o.DispatcherConfirmed && o.StationConfirmed && o.Status != OperationExecuted
+	return o.DispatcherConfirmed && o.StationConfirmed && o.Status == OperationConfirmed
 }
 
 // Execute transitions the operation to executed.
